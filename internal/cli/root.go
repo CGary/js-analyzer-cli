@@ -6,10 +6,9 @@ import (
 	"path/filepath"
 	"strings"
 
-	"github.com/spf13/cobra"
-	// IMPORTANTE: Cambia esta ruta por la de tu módulo
 	"github.com/cgary/js-analyzer-cli/internal/extractor"
 	"github.com/cgary/js-analyzer-cli/internal/segmentation"
+	"github.com/spf13/cobra"
 )
 
 var rootCmd = &cobra.Command{
@@ -40,7 +39,6 @@ var rootCmd = &cobra.Command{
 		fmt.Printf("✅ Se extrajeron %d archivos locales.\n", len(files))
 
 		// 2. Procesar, segmentar y guardar
-		// NUEVO: Le pasamos 'entryCleanName' a la función
 		err = segmentation.ProcessAndSave(files, outdir, chunkSize, entryCleanName)
 		if err != nil {
 			fmt.Printf("❌ Error de Segmentación: %v\n", err)

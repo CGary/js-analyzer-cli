@@ -75,7 +75,7 @@ func ProcessAndSave(files []string, outDir string, chunkSize int, entryName stri
 	}
 
 	if len(currentChunk) > 0 {
-		// NUEVO: Pasamos el entryName
+		// Pasamos el entryName
 		if err := guardarArchivo(outDir, chunkIndex, currentChunk, entryName); err != nil {
 			return err
 		}

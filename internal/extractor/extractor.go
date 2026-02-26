@@ -8,7 +8,6 @@ import (
 	"github.com/evanw/esbuild/pkg/api"
 )
 
-// GetDependencies utiliza esbuild para rastrear y devolver todas las dependencias locales.
 func GetDependencies(entryPoint string) ([]string, error) {
 	var localFiles []string
 
