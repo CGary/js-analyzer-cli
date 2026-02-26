@@ -1,0 +1,13 @@
+# Binarios
+analyzer
+js-analyzer
+*.exe
+
+# Carpetas de salida de tus pruebas
+output/
+mis_resultados/
+sidebar/
+
+# Dependencias (Go las gestiona con go.mod)
+vendor/
+.aider*
