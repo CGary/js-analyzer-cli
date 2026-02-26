@@ -12,14 +12,20 @@ import (
 )
 
 var rootCmd = &cobra.Command{
-	Use:   "js-analyzer",
+	Use:   "jsa [archivo_de_entrada]",
 	Short: "Analizador de dependencias JS/TS a Markdown",
 	Long:  `js-analyzer es una herramienta CLI ultrarrápida...`,
+
+	Args: cobra.MaximumNArgs(1),
 
 	Run: func(cmd *cobra.Command, args []string) {
 		entry, _ := cmd.Flags().GetString("entry")
 		outdir, _ := cmd.Flags().GetString("outdir")
 		chunkSize, _ := cmd.Flags().GetInt("chunk-size")
+
+		if len(args) > 0 {
+			entry = args[0]
+		}
 
 		baseName := filepath.Base(entry)
 		ext := filepath.Ext(baseName)

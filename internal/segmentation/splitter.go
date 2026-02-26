@@ -23,8 +23,14 @@ func getMarkdownLang(filename string) string {
 		return "jsx"
 	case ".json":
 		return "json"
+	case ".css":
+		return "css"
+	case ".scss":
+		return "scss"
+	case ".less":
+		return "less"
 	default:
-		return "javascript" // fallback por defecto
+		return "javascript"
 	}
 }
 

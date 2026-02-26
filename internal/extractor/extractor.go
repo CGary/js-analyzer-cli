@@ -16,7 +16,7 @@ func GetDependencies(entryPoint string) ([]string, error) {
 		Setup: func(build api.PluginBuild) {
 			// 1. FILTRO DE ACTIVOS: Marcamos imágenes y otros archivos no deseados como externos
 			// Esto evita que esbuild intente abrirlos o procesarlos.
-			build.OnResolve(api.OnResolveOptions{Filter: `\.(png|jpg|jpeg|gif|svg|ico|webp|avif|css|scss|less|woff|woff2)$`},
+			build.OnResolve(api.OnResolveOptions{Filter: `\.(png|jpg|jpeg|gif|svg|ico|webp|avif|woff|woff2|ttf|eot)$`},
 				func(args api.OnResolveArgs) (api.OnResolveResult, error) {
 					return api.OnResolveResult{External: true}, nil
 				})
@@ -28,7 +28,6 @@ func GetDependencies(entryPoint string) ([]string, error) {
 				if isCodeExtension(ext) {
 					localFiles = append(localFiles, args.Path)
 				}
-
 				return api.OnLoadResult{}, nil
 			})
 		},
@@ -38,15 +37,19 @@ func GetDependencies(entryPoint string) ([]string, error) {
 		EntryPoints: []string{entryPoint},
 		Bundle:      true,
 		Write:       false,
+		Outdir:      "out",
 		Packages:    api.PackagesExternal,
 		Plugins:     []api.Plugin{trackerPlugin},
 
 		Loader: map[string]api.Loader{
-			".js":   api.LoaderJSX, // Trata los .js como JSX
+			".js":   api.LoaderJSX,
 			".jsx":  api.LoaderJSX,
 			".ts":   api.LoaderTS,
-			".tsx":  api.LoaderTSX, // Trata los .tsx como TypeScript con JSX
+			".tsx":  api.LoaderTSX,
 			".json": api.LoaderJSON,
+			".css":  api.LoaderCSS,
+			".scss": api.LoaderCSS,
+			".less": api.LoaderCSS,
 		},
 
 		LogOverride: map[string]api.LogLevel{
@@ -64,7 +67,7 @@ func GetDependencies(entryPoint string) ([]string, error) {
 // isCodeExtension ayuda a filtrar solo los archivos que queremos en nuestro Markdown
 func isCodeExtension(ext string) bool {
 	switch ext {
-	case ".js", ".jsx", ".ts", ".tsx", ".mjs", ".cjs", ".json":
+	case ".js", ".jsx", ".ts", ".tsx", ".mjs", ".cjs", ".json", ".css", ".scss", ".less":
 		return true
 	default:
 		return false
