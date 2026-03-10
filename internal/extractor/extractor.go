@@ -16,7 +16,7 @@ func GetDependencies(entryPoint string) ([]string, error) {
 		Setup: func(build api.PluginBuild) {
 			// 1. FILTRO DE ACTIVOS: Marcamos imágenes y otros archivos no deseados como externos
 			// Esto evita que esbuild intente abrirlos o procesarlos.
-			build.OnResolve(api.OnResolveOptions{Filter: `\.(png|jpg|jpeg|gif|svg|ico|webp|avif|woff|woff2|ttf|eot)$`},
+			build.OnResolve(api.OnResolveOptions{Filter: `\.(png|jpg|jpeg|gif|svg|ico|webp|avif|woff|woff2|ttf|eot|otf)$`},
 				func(args api.OnResolveArgs) (api.OnResolveResult, error) {
 					return api.OnResolveResult{External: true}, nil
 				})
@@ -38,6 +38,7 @@ func GetDependencies(entryPoint string) ([]string, error) {
 		Bundle:      true,
 		Write:       false,
 		Outdir:      "out",
+		Format:      api.FormatIIFE,
 		Packages:    api.PackagesExternal,
 		Plugins:     []api.Plugin{trackerPlugin},
 
@@ -58,7 +59,13 @@ func GetDependencies(entryPoint string) ([]string, error) {
 	})
 
 	if len(result.Errors) > 0 {
-		return nil, fmt.Errorf("error de esbuild al procesar %s: %s", entryPoint, result.Errors[0].Text)
+		mensajes := api.FormatMessages(result.Errors, api.FormatMessagesOptions{
+			Kind:          api.ErrorMessage,
+			Color:         true,
+			TerminalWidth: 80,
+		})
+
+		return nil, fmt.Errorf("error de esbuild al procesar %s:\n%s", entryPoint, strings.Join(mensajes, "\n"))
 	}
 
 	return localFiles, nil
